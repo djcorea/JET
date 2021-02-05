@@ -12,4 +12,10 @@
             </div>
         </div>
     </div>
+    <x-jet-danger-button class="ml-2" wire:click="deleteUser" wire:loading.attr="disabled">
+            Delete Account
+        </x-jet-danger-button>
+
 </x-app-layout>
+
+
