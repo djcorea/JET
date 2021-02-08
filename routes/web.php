@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dash', function () {
 
 */
 
-Route::get('/dash','App\Http\Controllers\DashboardController');
+Route::get('/dash','App\Http\Controllers\DashboardController@index');
 Route::get('/dash/crud',function(){
     return view('crud.index');
 });
