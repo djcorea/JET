@@ -1,5 +1,4 @@
-alert("Hi");
-console.log("hi");
+
 
 var x = document.getElementById('btn1');
 
