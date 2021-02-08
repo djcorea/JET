@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\View;
 |
 */
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 /*
 
@@ -80,6 +80,6 @@ Route::get('/usuario/{usuario}',function($usuario){
     return "<h1>El usuari es:______".$usuario."</h1>";
 })->where('usuario','[a-z]+');
 */
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dash', function () {
+    return view('dash.index');
+})->name('dash');
