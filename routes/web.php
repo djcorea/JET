@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\View;
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*
 Route::get('/', function () {
     return view('welcome');
 });
+/*
+
 
 if (View::exists('vista2')) {
     Route::get('/', function () {
@@ -28,10 +29,10 @@ if (View::exists('vista2')) {
     });
 }
 
-*/
+
 Route::get('/','App\Http\Controllers\InicioController@index');
 
-/*
+
 
 
 Route::get('texto', function(){
