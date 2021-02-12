@@ -8,6 +8,6 @@ class dummyAPI extends Controller
 {
     //
     function getData(){
-        return["name"=>"DANY COREA"];
+        return["name"=>"DANY COREA", "email"=>"dcorea@gmail.com"];
     }
 }
