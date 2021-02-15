@@ -4,6 +4,7 @@
  <h2>CREAR REGISTROS</h2>
 
 <form action="/articulos" method="post">
+ @csrf
     <div class="mb-3">  
         <label for="" class="form-label">Código</label>
         <input type="text" name="codigo" id="codigo" class="form-control" tabindex="1">

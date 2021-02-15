@@ -20,7 +20,7 @@
             <tr>
                 <td>{{$articulo->id}}</td>
                 <td>{{$articulo->codigo}}</td>
-                <td>{{$articulo->drscripcion}}</td>
+                <td>{{$articulo->descripcion}}</td>
                 <td>{{$articulo->cantidad}}</td>
                 <td>{{$articulo->precio}}</td>
                 <td>
