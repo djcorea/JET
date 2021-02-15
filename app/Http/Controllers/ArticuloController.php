@@ -82,7 +82,18 @@ class ArticuloController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $articulo=Articulo::find($id);//instanciar la clase del modelo
+
+        //asignar a la clase respectivos valores del form
+        $articulo->codigo=$request->get('codigo');
+        $articulo->descripcion=$request->get('descripcion');
+        $articulo->cantidad=$request->get('cantidad');
+        $articulo->precio=$request->get('precio');
+
+        $articulo->save();//metodo para guardar en la bbdd
+
+        //para redireccionar a otra pagina
+        return redirect('/articulos');
     }
 
     /**

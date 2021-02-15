@@ -24,7 +24,8 @@
                 <td>{{$articulo->cantidad}}</td>
                 <td>{{$articulo->precio}}</td>
                 <td>
-                    <a href="/articulos/edit" class="btn btn-info">editar</a>
+                    <a href="/articulos/{{$articulo->id}}/edit" class="btn btn-info">editar</a>
+                    
                     <button class="btn btn-danger">ELIMINAR</button>
                 </td>
             </tr>
