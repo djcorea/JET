@@ -23,5 +23,8 @@
         <label for="" class="form-label">Precio</label>
         <input type="number" name="precio" id="precio" class="form-control" step="any" value="0.00" tabindex="4">
     </div>
+
+    <a href="/articulos" class="btn btn-secondary" tabindex="5">Cancelar</a>
+    <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>
 </form>
 @endsection
