@@ -69,7 +69,8 @@ class ArticuloController extends Controller
      */
     public function edit($id)
     {
-        //
+        $articulo = Articulo::find($id);
+        return view('articulo.edit')->with('articulo',$articulo);
     }
 
     /**
