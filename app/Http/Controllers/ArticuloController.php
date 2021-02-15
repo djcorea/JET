@@ -36,11 +36,18 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-        $articulos=new Articulo();
+        $articulos=new Articulo();//instanciar la clase del modelo
+
+        //asignar a la clase respectivos valores del form
         $articulos->codigo=$request->get('codigo');
         $articulos->descripcion=$request->get('descripcion');
         $articulos->cantidad=$request->get('cantidad');
         $articulos->precio=$request->get('precio');
+
+        $articulos->save();//metodo para guardar en la bbdd
+
+        //para redireccionar a otra pagina
+        return redirect('/articulos');
     }
 
     /**

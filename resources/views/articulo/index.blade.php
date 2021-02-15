@@ -16,7 +16,7 @@
     </thead>
     <tbody>
 
-        @foreach ($articulos as $articulos)
+        @foreach ($articulos as $articulo)
             <tr>
                 <td>{{$articulo->id}}</td>
                 <td>{{$articulo->codigo}}</td>
