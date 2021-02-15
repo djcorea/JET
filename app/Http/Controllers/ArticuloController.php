@@ -104,6 +104,11 @@ class ArticuloController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $articulo=Articulo::find($id);//instanciar la clase del modelo
+
+        $articulo->delete();//metodo para guardar en la bbdd
+
+        //para redireccionar a otra pagina
+        return redirect('/articulos');
     }
 }

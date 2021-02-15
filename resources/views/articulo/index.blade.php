@@ -24,9 +24,14 @@
                 <td>{{$articulo->cantidad}}</td>
                 <td>{{$articulo->precio}}</td>
                 <td>
-                    <a href="/articulos/{{$articulo->id}}/edit" class="btn btn-info">editar</a>
-                    
-                    <button class="btn btn-danger">ELIMINAR</button>
+                 
+                    <form action="{{route('articulos.destroy',$articulo->id)}}" method="post">
+                       <a href="/articulos/{{$articulo->id}}/edit" class="btn btn-info">editar</a>
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">ELIMINAR</button>
+                    </form>
+
                 </td>
             </tr>
         @endforeach
