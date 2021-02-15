@@ -11,17 +11,17 @@
 
     <div class="mb-3">  
         <label for="" class="form-label">Descripción</label>
-        <input type="text" name="descripcion" id="descripcion" class="form-control" tabindex="1">
+        <input type="text" name="descripcion" id="descripcion" class="form-control" tabindex="2">
     </div>
 
     <div class="mb-3">  
         <label for="" class="form-label">cantidad</label>
-        <input type="text" name="cantidad" id="cantidad" class="form-control" tabindex="1">
+        <input type="number" name="cantidad" id="cantidad" class="form-control" tabindex="3">
     </div>
 
     <div class="mb-3">  
         <label for="" class="form-label">Precio</label>
-        <input type="text" name="precio" id="precio" class="form-control" tabindex="1">
+        <input type="number" name="precio" id="precio" class="form-control" step="any" value="0.00" tabindex="4">
     </div>
 </form>
 @endsection
