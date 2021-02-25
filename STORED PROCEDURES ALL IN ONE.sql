@@ -208,14 +208,14 @@ NOT DETERMINISTIC
 NO SQL 
 SQL SECURITY DEFINER
 
-IF (SELECT EXISTS(SELECT `DESCRIPCION` FROM `GRADOS` WHERE `DESCRIPCION` =DESCRIPCION_)=1 && OPCION_<>'DELETE') THEN 
+IF (SELECT EXISTS(SELECT `DESCRIPCION` FROM `GRADOS_ACADEMICOS`  WHERE `DESCRIPCION` =DESCRIPCION_)=1 && OPCION_<>'DELETE') THEN 
    SELECT ("EL GRADO YA EXISTE");
 
 ELSE
     CASE OPCION_
             WHEN  'INSERT' THEN
 
-                INSERT INTO `GRADOS`(
+                INSERT INTO `GRADOS_ACADEMICOS` (
                     `DESCRIPCION`) 
                 VALUES ( 
                     DESCRIPCION_);
@@ -223,14 +223,14 @@ ELSE
                 
             WHEN  'UPDATE' THEN
 
-                    UPDATE `GRADOS` 
+                    UPDATE `GRADOS_ACADEMICOS` 
                     SET 
                         `DESCRIPCION`       =  DESCRIPCION_
                     WHERE `ID_GRADO` =  ID_GRADO_;
             
             WHEN  'DELETE' THEN
 
-                    DELETE FROM `GRADOS` WHERE `ID_GRADO` =  ID_GRADO_;        
+                    DELETE FROM `GRADOS_ACADEMICOS`  WHERE `ID_GRADO` =  ID_GRADO_;        
                     
             ELSE
                 SELECT ("OTHER OPTION");
