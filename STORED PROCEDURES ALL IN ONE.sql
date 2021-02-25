@@ -66,7 +66,10 @@ DELIMITER ;
 
 -- -----------------------------------------------------------------------------
 DELIMITER $$
-CREATE DEFINER=`ADMIN`@`localhost` PROCEDURE `SP_BANCOS`(IN `ID_BANCO_` INT(11), IN `NOMBRE_` VARCHAR(100), IN `OPCION_` ENUM('UPDATE','INSERT','DELETE'))
+CREATE DEFINER=`ADMIN`@`localhost` PROCEDURE `SP_BANCOS`(
+    IN `ID_BANCO_` INT(11), 
+    IN `NOMBRE_` VARCHAR(100), 
+    IN `OPCION_` ENUM('UPDATE','INSERT','DELETE'))
     NO SQL
 IF (SELECT EXISTS(SELECT `NOMBRE` FROM `BANCOS` WHERE `NOMBRE` =NOMBRE_)=1 && OPCION_<>'DELETE') THEN 
     SELECT ("EL BANCO YA EXISTE");
@@ -103,9 +106,45 @@ DELIMITER ;
 -- -----------------------------------------------------------------------------
 
 
+CREATE PROCEDURE `SP_ESTADOS`(
+    -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
+    IN `DESCRIPCION_` VARCHAR(100) )
 
+NOT DETERMINISTIC
+NO SQL 
+SQL SECURITY DEFINER
 
+IF (SELECT EXISTS(SELECT `DESCRIPCION` FROM `ESTADOS` WHERE `DESCRIPCION` =DESCRIPCION_)=1) THEN 
+   SELECT ("EL ESTADO YA EXISTE");
 
+ELSE
+        
+
+END IF ;;
+
+CASE OPCION_
+        WHEN  'INSERT' THEN
+
+            INSERT INTO `ESTADOS`(
+            `DESCRIPCION`) 
+        VALUES (
+            DESCRIPCION_);
+
+            
+        WHEN  'UPDATE' THEN
+
+                UPDATE `BANCOS` 
+                SET 
+                    `NOMBRE`     =  NOMBRE_
+                WHERE `ID_BANCO` =  ID_BANCO_;
+        
+        WHEN  'DELETE' THEN
+
+                DELETE FROM `BANCOS` WHERE `ID_BANCO` =  ID_BANCO_;        
+                
+        ELSE
+            SELECT ("OTHER OPTION");
+END CASE;
 
 
 -- -----------------------------------------------------------------------------
