@@ -202,13 +202,13 @@ CREATE PROCEDURE `SP_GRADOS`(
     -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
      IN `ID_GRADO_` INT(11),
     IN `OPCION_` ENUM('UPDATE','INSERT','DELETE') ,
-    IN `NOMBRE_` VARCHAR(100) )
+    IN `DESCRIPCION_` VARCHAR(100) )
 
 NOT DETERMINISTIC
 NO SQL 
 SQL SECURITY DEFINER
 
-IF (SELECT EXISTS(SELECT `NOMBRE` FROM `GRADOS` WHERE `NOMBRE` =NOMBRE_)=1 && OPCION_<>'DELETE') THEN 
+IF (SELECT EXISTS(SELECT `DESCRIPCION` FROM `GRADOS` WHERE `DESCRIPCION` =DESCRIPCION_)=1 && OPCION_<>'DELETE') THEN 
    SELECT ("EL GRADO YA EXISTE");
 
 ELSE
@@ -216,16 +216,16 @@ ELSE
             WHEN  'INSERT' THEN
 
                 INSERT INTO `GRADOS`(
-                    `NOMBRE`) 
+                    `DESCRIPCION`) 
                 VALUES ( 
-                    NOMBRE_);
+                    DESCRIPCION_);
 
                 
             WHEN  'UPDATE' THEN
 
                     UPDATE `GRADOS` 
                     SET 
-                        `NOMBRE`       =  NOMBRE_
+                        `DESCRIPCION`       =  DESCRIPCION_
                     WHERE `ID_GRADO` =  ID_GRADO_;
             
             WHEN  'DELETE' THEN
