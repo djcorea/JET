@@ -194,3 +194,48 @@ END IF$$
 DELIMITER ;
 
 -- -----------------------------------------------------------------------------
+
+
+DELIMITER $$
+
+CREATE PROCEDURE `SP_GRADOS`(
+    -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
+     IN `ID_GRADO_` INT(11),
+    IN `OPCION_` ENUM('UPDATE','INSERT','DELETE') ,
+    IN `NOMBRE_` VARCHAR(100) )
+
+NOT DETERMINISTIC
+NO SQL 
+SQL SECURITY DEFINER
+
+IF (SELECT EXISTS(SELECT `NOMBRE` FROM `GRADOS` WHERE `NOMBRE` =NOMBRE_)=1 && OPCION_<>'DELETE') THEN 
+   SELECT ("EL GRADO YA EXISTE");
+
+ELSE
+    CASE OPCION_
+            WHEN  'INSERT' THEN
+
+                INSERT INTO `GRADOS`(
+                    `NOMBRE`) 
+                VALUES ( 
+                    NOMBRE_);
+
+                
+            WHEN  'UPDATE' THEN
+
+                    UPDATE `GRADOS` 
+                    SET 
+                        `NOMBRE`       =  NOMBRE_
+                    WHERE `ID_GRADO` =  ID_GRADO_;
+            
+            WHEN  'DELETE' THEN
+
+                    DELETE FROM `GRADOS` WHERE `ID_GRADO` =  ID_GRADO_;        
+                    
+            ELSE
+                SELECT ("OTHER OPTION");
+    END CASE; 
+       
+END IF$$
+
+DELIMITER ;
