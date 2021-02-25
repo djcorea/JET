@@ -70,18 +70,38 @@ DELIMITER ;
 DELIMITER $$
 CREATE  PROCEDURE `SP_BANCOS`(
     -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
-    IN `NOMBRE_` VARCHAR(100) )
+    IN `ID_EBANCO_` INT(11),
+    IN `NOMBRE_` VARCHAR(100),
+    IN `OPCCION_` ENUM('UPDATE','INSERT','DELETE')
     NO SQL
-IF (SELECT EXISTS(SELECT `NOMBRE` FROM `BANCOS` WHERE `NOMBRE` =NOMBRE_)=1) THEN 
-   SELECT ("EL BANCO YA EXISTE");
 
-ELSE
-        INSERT INTO `BANCOS`(
-            `NOMBRE`) 
-        VALUES (
-            NOMBRE_);
 
-END IF$$
+CASE OPCION_
+                WHEN  'INSERT' THEN
+                    IF (SELECT EXISTS(SELECT `NOMBRE` FROM `BANCOS` WHERE `NOMBRE` =NOMBRE_)=1) THEN 
+                    SELECT ("EL BANCO YA EXISTE");
+
+                    ELSE
+                    INSERT INTO `BANCOS`(
+                    `NOMBRE`) 
+                    VALUES (
+                    NOMBRE_);
+
+                    END IF;
+                WHEN  'UPDATE' THEN
+                         UPDATE `EMPLEADOS` 
+                        SET 
+                            `HORASLABORALES` =  HORASLABORALES_,
+                            `SUELDO_BASE` =  SUELDO_BASE_,
+                            `ID_GRADO_ACADEMICO` =  ID_GRADO_ACADEMICO_  
+                        
+                        WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
+                        
+                        
+                ELSE
+                    SELECT ("OTHER OPTION");
+            END CASE$$
+
 DELIMITER ;
 
 
