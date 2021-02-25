@@ -226,11 +226,11 @@ ELSE
                     UPDATE `GRADOS_ACADEMICOS` 
                     SET 
                         `DESCRIPCION`       =  DESCRIPCION_
-                    WHERE `ID_GRADO` =  ID_GRADO_;
+                    WHERE `ID_GRADO_ACADEMICO` =  ID_GRADO_;
             
             WHEN  'DELETE' THEN
 
-                    DELETE FROM `GRADOS_ACADEMICOS`  WHERE `ID_GRADO` =  ID_GRADO_;        
+                    DELETE FROM `GRADOS_ACADEMICOS`  WHERE `ID_GRADO_ACADEMICO` =  ID_GRADO_;        
                     
             ELSE
                 SELECT ("OTHER OPTION");
