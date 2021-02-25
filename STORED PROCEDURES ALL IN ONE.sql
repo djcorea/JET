@@ -38,12 +38,13 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                             SUELDO_BASE_, 
                             HORASLABORALES_ );
                     END IF; -- PERSONA EMPLEADO
+
                 WHEN  'UPDATE' THEN
                          UPDATE `EMPLEADOS` 
                         SET 
-                            `HORASLABORALES` =  HORASLABORALES_,
-                            `SUELDO_BASE` =  SUELDO_BASE_,
-                            `ID_GRADO_ACADEMICO` =  ID_GRADO_ACADEMICO_  
+                            `HORASLABORALES`        = HORASLABORALES_,
+                            `SUELDO_BASE`           = SUELDO_BASE_,
+                            `ID_GRADO_ACADEMICO`    = ID_GRADO_ACADEMICO_  
                         
                         WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
                         
@@ -64,44 +65,37 @@ DELIMITER ;
 
 
 -- -----------------------------------------------------------------------------
-
-
-
 DELIMITER $$
-CREATE  PROCEDURE `SP_BANCOS`(
-    -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
-    IN `ID_EBANCO_` INT(11),
-    IN `NOMBRE_` VARCHAR(100),
-    IN `OPCCION_` ENUM('UPDATE','INSERT','DELETE')
+CREATE DEFINER=`ADMIN`@`localhost` PROCEDURE `SP_BANCOS`(IN `ID_BANCO_` INT(11), IN `NOMBRE_` VARCHAR(100), IN `OPCION_` ENUM('UPDATE','INSERT','DELETE'))
     NO SQL
+IF (SELECT EXISTS(SELECT `NOMBRE` FROM `BANCOS` WHERE `NOMBRE` =NOMBRE_)=1 && OPCION_<>'DELETE') THEN 
+    SELECT ("EL BANCO YA EXISTE");
+ELSE
+    CASE OPCION_
+        WHEN  'INSERT' THEN
 
+            INSERT INTO `BANCOS`(
+            `NOMBRE`) 
+            VALUES (
+            NOMBRE_);
 
-CASE OPCION_
-                WHEN  'INSERT' THEN
-                    IF (SELECT EXISTS(SELECT `NOMBRE` FROM `BANCOS` WHERE `NOMBRE` =NOMBRE_)=1) THEN 
-                    SELECT ("EL BANCO YA EXISTE");
+            
+        WHEN  'UPDATE' THEN
 
-                    ELSE
-                    INSERT INTO `BANCOS`(
-                    `NOMBRE`) 
-                    VALUES (
-                    NOMBRE_);
+                UPDATE `BANCOS` 
+                SET 
+                    `NOMBRE`     =  NOMBRE_
+                WHERE `ID_BANCO` =  ID_BANCO_;
+        
+        WHEN  'DELETE' THEN
 
-                    END IF;
-                WHEN  'UPDATE' THEN
-                         UPDATE `EMPLEADOS` 
-                        SET 
-                            `HORASLABORALES` =  HORASLABORALES_,
-                            `SUELDO_BASE` =  SUELDO_BASE_,
-                            `ID_GRADO_ACADEMICO` =  ID_GRADO_ACADEMICO_  
-                        
-                        WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
-                        
-                        
-                ELSE
-                    SELECT ("OTHER OPTION");
-            END CASE$$
-
+                DELETE FROM `BANCOS` WHERE `ID_BANCO` =  ID_BANCO_;        
+                
+        ELSE
+            SELECT ("OTHER OPTION");
+    END CASE;
+    
+END IF$$
 DELIMITER ;
 
 
