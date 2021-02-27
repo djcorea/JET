@@ -297,27 +297,99 @@ END IF$$
 DELIMITER ;
 
 
+-- -----------------------------------------------------------------------------
 
-/*##############################################
-#################CASE STRUCTURE#################
-##############################################*/
- CASE OPCION_
+DELIMITER $$
+CREATE PROCEDURE `SP_ROLES`(
+    -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
+    IN `ID_ROL_`            INT(11),
+    IN `ID_ESTADO_`         INT(11),
+    IN `NOMBRE_`            VARCHAR(100),
+    IN `OPCION_`            ENUM('UPDATE','INSERT','DELETE') )
+
+NOT DETERMINISTIC
+NO SQL
+SQL SECURITY DEFINER
+
+IF (SELECT EXISTS(SELECT `ID_ESTADO` FROM `ESTADOS` WHERE `ID_ESTADO` =ID_ESTADO_)=0 && OPCION_ <>'DELETE') THEN
+
+    SELECT ("EL ESTADO NO EXISTE");
+
+ELSE
+    IF (SELECT EXISTS(SELECT `NOMBRE` FROM `ROLES` WHERE `NOMBRE` =NOMBRE_)=1 && OPCION_<>'DELETE') THEN
+        SELECT ("EL ROL YA EXISTE");
+    ELSE
+
+        CASE OPCION_
             WHEN  'INSERT' THEN
-
+                INSERT INTO `ROLES`(
+                    `NOMBRE`,
+                    `FECHACREACION`,
+                    `ID_ESTADO`)
+                VALUES (
+                    NOMBRE_,
+                    NOW(),
+                    ID_ESTADO_);
 
 
 
             WHEN  'UPDATE' THEN
 
-                    UPDATE `GRADOS_ACADEMICOS`
+                    UPDATE `ROLES`
                     SET
-                        `DESCRIPCION`       =  DESCRIPCION_
-                    WHERE `ID_GRADO_ACADEMICO` =  ID_GRADO_;
+                        `NOMBRE`        = NOMBRE_,
+                        `ID_ESTADO`     = ID_ESTADO_
+                    WHERE `ID_ROL` =  ID_ROL_;
 
             WHEN  'DELETE' THEN
 
-                    DELETE FROM `GRADOS_ACADEMICOS`  WHERE `ID_GRADO_ACADEMICO` =  ID_GRADO_;
+                    DELETE FROM `ROLES`  WHERE `ID_ROL` =  ID_ROL_;
 
             ELSE
                 SELECT ("OTHER OPTION");
-    END CASE;
+        END CASE;
+
+    END IF;
+
+END IF$$
+
+
+DELIMITER ;
+
+-- -----------------------------------------------------------------------------
+
+
+
+
+
+-- -----------------------------------------------------------------------------
+
+
+
+
+
+-- -----------------------------------------------------------------------------
+
+/*##############################################
+#################CASE STRUCTURE#################
+##############################################*/
+CASE OPCION_
+        WHEN  'INSERT' THEN
+
+
+
+
+        WHEN  'UPDATE' THEN
+
+                UPDATE `GRADOS_ACADEMICOS`
+                SET
+                    `DESCRIPCION`       =  DESCRIPCION_
+                WHERE `ID_GRADO_ACADEMICO` =  ID_GRADO_;
+
+        WHEN  'DELETE' THEN
+
+                DELETE FROM `GRADOS_ACADEMICOS`  WHERE `ID_GRADO_ACADEMICO` =  ID_GRADO_;
+
+        ELSE
+            SELECT ("OTHER OPTION");
+END CASE;
