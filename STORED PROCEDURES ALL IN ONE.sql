@@ -3,13 +3,15 @@
 DROP `SP_EMPLEADOS`;
 DELIMITER $$
 CREATE  PROCEDURE `SP_EMPLEADOS`(
-    IN `ID_EMPLEADO_` INT(11),
-    IN `ID_PERSONA_` INT(11),
-    IN `ID_GRADO_ACADEMICO_` INT(11),
-    IN `FECHA_CONTRATACION_` DATE,
-    IN `SUELDO_BASE_` DECIMAL(10,2),
-    IN `HORASLABORALES_` DECIMAL(10,2),
-    IN `OPCION_` ENUM('UPDATE','INSERT','DELETE')
+    IN `ID_EMPLEADO_`           INT(11),
+    IN `ID_PERSONA_`            INT(11),
+    IN `ID_GRADO_ACADEMICO_`    INT(11),
+    IN `FECHA_CONTRATACION_`    DATE,
+    IN `SUELDO_BASE_`           DECIMAL(10,2),
+    IN `HORASLABORALES_`        DECIMAL(10,2),
+    IN `ID_BANCO_`              INT(11),
+    IN `CUENTA_`                BIGINT(50),
+    IN `OPCION_`                ENUM('UPDATE','INSERT','DELETE')
     )
     NO SQL
 IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERSONA_)=1) THEN
@@ -37,6 +39,15 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                             FECHA_CONTRATACION_,
                             SUELDO_BASE_,
                             HORASLABORALES_ );
+
+                        INSERT INTO `CUENTAS_BANCARIAS`(
+                            `ID_BANCO`,
+                            `ID_EMPLEADO`,
+                            `CUENTA`)
+                        VALUES (
+                            ID_BANCO_,
+                            (SELECT LAST_INSERT_ID();),
+                            CUENTA_);
 
 
                     END IF; -- PERSONA EMPLEADO
@@ -74,9 +85,9 @@ DELIMITER ;
 -- -----------------------------------------------------------------------------
 DELIMITER $$
 CREATE DEFINER=`ADMIN`@`localhost` PROCEDURE `SP_BANCOS`(
-    IN `ID_BANCO_` INT(11),
-    IN `NOMBRE_` VARCHAR(100),
-    IN `OPCION_` ENUM('UPDATE','INSERT','DELETE'))
+    IN `ID_BANCO_`  INT(11),
+    IN `NOMBRE_`    VARCHAR(100),
+    IN `OPCION_`    ENUM('UPDATE','INSERT','DELETE'))
     NO SQL
 IF (SELECT EXISTS(SELECT `NOMBRE` FROM `BANCOS` WHERE `NOMBRE` =NOMBRE_)=1 && OPCION_<>'DELETE') THEN
     SELECT ("EL BANCO YA EXISTE");
