@@ -53,12 +53,17 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                     END IF; -- PERSONA EMPLEADO
 
                 WHEN  'UPDATE' THEN
-                         UPDATE `EMPLEADOS`
-                        SET
-                            `HORASLABORALES`        = HORASLABORALES_,
-                            `SUELDO_BASE`           = SUELDO_BASE_,
-                            `ID_GRADO_ACADEMICO`    = ID_GRADO_ACADEMICO_
+                        UPDATE `EMPLEADOS`
+                            SET
+                                `HORASLABORALES`        = HORASLABORALES_,
+                                `SUELDO_BASE`           = SUELDO_BASE_,
+                                `ID_GRADO_ACADEMICO`    = ID_GRADO_ACADEMICO_
+                        WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
 
+                         UPDATE `CUENTAS_BANCARIAS`(
+                            SET
+                                `ID_BANCO`      = ID_BANCO_,
+                                `CUENTA`        = CUENTA_
                         WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
 
                 WHEN  'DELETE' THEN
