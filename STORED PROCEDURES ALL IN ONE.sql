@@ -400,7 +400,7 @@ CASE OPCION_
                     `NOMBRE`            = NOMBRE_,
                     `DESCRIPCION`       = DESCRIPCION_,
                     `ID_DEPARTAMENTO`   = ID_DEPARTAMENTO_
-                WHERE `ID_PUESTO`  =  ID_PUESTO_;
+                WHERE `ID_PUESTO`       = ID_PUESTO_;
 
         WHEN  'DELETE' THEN
 
@@ -414,14 +414,85 @@ END CASE;
 
 
 END IF$$
-DELIMITER;
+DELIMITER ;
 
 
 -- -----------------------------------------------------------------------------
 
+DELIMITER $$
+
+CREATE PROCEDURE `SP_USUARIOS`(
+    -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
+    IN `ID_USUARIO_`            INT(11),
+    IN `ID_ROL_`                INT(11),
+    IN `ID_EMPLEADO_`           INT(11),
+    IN `ID_ESTADO_`             INT(11),
+    IN `FECHA_CREACION_`        DATE,
+    IN `NOMBRE_USUARIO_`        VARCHAR(255),
+    IN `PASSWORD_`              VARCHAR(255),
+    IN `USUARIO_REGISTRO_`      VARCHAR(50),
+    IN `OPCION_`                ENUM('UPDATE','INSERT','DELETE'))
+
+NOT DETERMINISTIC
+NO SQL
+SQL SECURITY DEFINER
+
+IF (SELECT EXISTS(SELECT `ID_ROL` FROM `ROLES` WHERE `ID_ROL` =ID_ROL_)=0 && OPCION_<>'DELETE') THEN
+    SELECT ("EL ROL NO EXISTE");
+ELSE
+    IF (SELECT EXISTS(SELECT `ID_EMPLEADO_` FROM `EMPLEADOS` WHERE `ID_EMPLEADO` =ID_EMPLEADO_)= 0 && OPCION_<>'DELETE') THEN
+            SELECT ("EL EMPLEADO NO EXISTE");
+    ELSE
+
+        IF (SELECT EXISTS(SELECT `ID_ESTADO` FROM `ESTADOS` WHERE `ID_ESTADO` =ID_ESTADO_) = 0 && OPCION_<>'DELETE') THEN
+            SELECT ("EL ESTADO NO EXISTE");
+        ELSE
+            CASE OPCION_
+                    WHEN  'INSERT' THEN
+                        INSERT INTO `USUARIOS`(
+                            `ID_ROL`,
+                            `ID_EMPLEADO`,
+                            `ID_ESTADO`,
+                            `FECHA_CREACION`,
+                            `NOMBRE_USUARIO`,
+                            `PASSWORD`,
+                            `USUARIO_REGISTRO`)
+                        VALUES (
+                            ID_ROL_,
+                            ID_EMPLEADO_ ,
+                            ID_ESTADO_ ,
+                            FECHA_CREACION_ ,
+                            NOMBRE_USUARIO_ ,
+                            PASSWORD_ ,
+                            USUARIO_REGISTRO_ );
 
 
 
+                    WHEN  'UPDATE' THEN
+
+                            UPDATE `USUARIOS`
+                            SET
+                                `ID_ROL`            = ID_ROL_,
+                                `ID_EMPLEADO`       = ID_EMPLEADO,
+                                `ID_ESTADO`         = ID_ESTADO_,
+                                `FECHA_CREACION`    = FECHA_CREACION_,
+                                `NOMBRE_USUARIO`    = NOMBRE_USUARIO_,
+                                `PASSWORD`          = PASSWORD_,
+                                `USUARIO_REGISTRO`  = USUARIO_REGISTRO_
+                            WHERE `ID_USUARIO` =  ID_USUARIO_;
+
+                    WHEN  'DELETE' THEN
+
+                            DELETE FROM `GRADOS_ACADEMICOS`  WHERE `ID_USUARIO` =  ID_USUARIO_;
+
+                    ELSE
+                        SELECT ("OTHER OPTION");
+            END CASE;
+
+        END IF;
+    END IF;
+END IF$$
+DELIMITER ;
 
 -- -----------------------------------------------------------------------------
 
