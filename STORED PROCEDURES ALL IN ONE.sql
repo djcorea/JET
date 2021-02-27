@@ -37,6 +37,8 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                             FECHA_CONTRATACION_,
                             SUELDO_BASE_,
                             HORASLABORALES_ );
+
+
                     END IF; -- PERSONA EMPLEADO
 
                 WHEN  'UPDATE' THEN
@@ -48,7 +50,12 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
 
                         WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
 
+                WHEN  'DELETE' THEN
+                         UPDATE `EMPLEADOS`
+                        SET
+                           `ESTADO`    = 'INACTIVO'
 
+                        WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
                 ELSE
                     SELECT ("OTHER OPTION");
             END CASE;
@@ -483,7 +490,7 @@ ELSE
 
                     WHEN  'DELETE' THEN
 
-                            DELETE FROM `GRADOS_ACADEMICOS`  WHERE `ID_USUARIO` =  ID_USUARIO_;
+                            DELETE FROM `USUARIOS`  WHERE `ID_USUARIO` =  ID_USUARIO_;
 
                     ELSE
                         SELECT ("OTHER OPTION");
