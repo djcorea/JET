@@ -13,7 +13,7 @@ CREATE  PROCEDURE `SP_EMPLEADOS`(
     IN `CUENTA_`                BIGINT(50),
     IN `FECHA_INICIO_`          DATE,
     IN `FECHA_FINAL_`           DATE,
-    IN `MONTO_`                 DECIMAL(10,2),
+    -- IN `MONTO_`                 DECIMAL(10,2),
     IN `ID_PUESTO_`             INT(11),
     IN `FECHA_INICIO_PUESTO_`   DATE,
     IN `FECHA_FINAL_PUESTO_`    DATE,
@@ -45,14 +45,14 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                             SUELDO_BASE_,
                             HORASLABORALES_ );
 
-
+                        SET @ID=(SELECT LAST_INSERT_ID());
                         INSERT INTO `CUENTAS_BANCARIAS`(
                             `ID_BANCO`,
                             `ID_EMPLEADO`,
                             `CUENTA`)
                         VALUES (
                             ID_BANCO_,
-                            (SELECT LAST_INSERT_ID()),
+                            @ID,
                             CUENTA_);
 
 
@@ -66,7 +66,7 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                                 `FECHA_FINAL_SALARIO`,
                                 `MONTO`)
                             VALUES (
-                                 (SELECT LAST_INSERT_ID()),
+                                 @ID,
                                 FECHA_INICIO_,
                                 NULL,
                                 MONTO_);
@@ -78,7 +78,7 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                         `FECHA_INICIO_PUESTO`)
                     VALUES (
                         ID_PUESTO_,
-                         (SELECT LAST_INSERT_ID()),
+                         @ID,
                         FECHA_INICIO_PUESTO_
                         );
 
@@ -98,6 +98,27 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                                 `ID_BANCO`      = ID_BANCO_,
                                 `CUENTA`        = CUENTA_
                         WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
+
+                        SET @MONTO=(SELECT `MONTO` FROM `HISTORIAL_SALARIOS` WHERE `ID_EMPLEADO`=ID_EMPLEADO_ && `FECHA_FINAL_SALARIO` IS NULL);
+                        IF(@MONTO<>SUELDO_BASE_) THEN
+                            UPDATE `HISTORIAL_SALARIOS`
+                                SET
+                                    `FECHA_FINAL_SALARIO`  =(now())
+                            WHERE `ID_EMPLEADO` = ID_EMPLEADO_ && `FECHA_FINAL_SALARIO` IS NULL;
+
+                            INSERT INTO `HISTORIAL_SALARIOS`(
+                                `ID_EMPLEADO`,
+                                `FECHA_INICIO_SALARIO`,
+                                `FECHA_FINAL_SALARIO`,
+                                `MONTO`)
+                            VALUES (
+                                ID_EMPLEADO_,
+                                NOW(),
+                                NULL,
+                               SUELDO_BASE_);
+
+                        END IF;
+
 
                 WHEN  'DELETE' THEN
                          UPDATE `EMPLEADOS`
@@ -575,3 +596,12 @@ CASE OPCION_
         ELSE
             SELECT ("OTHER OPTION");
 END CASE;
+
+
+
+
+
+
+
+
+
