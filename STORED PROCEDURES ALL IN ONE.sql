@@ -357,9 +357,41 @@ END IF$$
 DELIMITER ;
 
 -- -----------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE `SP_PUESTOS`(
+    -- DEFINICIÓN DE PARAMETROS QUE VA A RECIBIR EL PROCEDIMIENTO
+    IN `ID_PUESTO_`          INT(11),
+    IN `NOMBRE_`             VARCHAR(100) ,
+    IN `DESCRIPCION_`        VARCHAR(200),
+    IN `ID_DEPARTAMENTO_`    INT(11),
+    IN `OPCION_`             ENUM('UPDATE','INSERT','DELETE'))
+
+NOT DETERMINISTIC
+NO SQL
+SQL SECURITY DEFINER
 
 
 
+
+
+IF (SELECT EXISTS(SELECT `ID_DEPARTAMENTO` FROM `DEPARTAMENTOS` WHERE `ID_DEPARTAMENTO` =ID_DEPARTAMENTO_)=1) THEN
+
+    INSERT INTO `PUESTOS`(
+        `NOMBRE` ,
+        `DESCRIPCION`,
+        `ID_DEPARTAMENTO` )
+
+    VALUES (
+        NOMBRE_,
+        DESCRIPCION_,
+        ID_DEPARTAMENTO_);
+
+ELSE
+   SELECT ("EL DEPARTAMENTO NO EXISTE");
+
+END IF$$
+DELIMITER;
 
 
 -- -----------------------------------------------------------------------------
