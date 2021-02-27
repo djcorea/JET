@@ -375,20 +375,43 @@ SQL SECURITY DEFINER
 
 
 
-IF (SELECT EXISTS(SELECT `ID_DEPARTAMENTO` FROM `DEPARTAMENTOS` WHERE `ID_DEPARTAMENTO` =ID_DEPARTAMENTO_)=1) THEN
-
-    INSERT INTO `PUESTOS`(
-        `NOMBRE` ,
-        `DESCRIPCION`,
-        `ID_DEPARTAMENTO` )
-
-    VALUES (
-        NOMBRE_,
-        DESCRIPCION_,
-        ID_DEPARTAMENTO_);
-
-ELSE
+IF (SELECT EXISTS(SELECT `ID_DEPARTAMENTO` FROM `DEPARTAMENTOS` WHERE `ID_DEPARTAMENTO` =ID_DEPARTAMENTO_)=0 && OPCION_ <>'DELETE') THEN
    SELECT ("EL DEPARTAMENTO NO EXISTE");
+ELSE
+
+CASE OPCION_
+        WHEN  'INSERT' THEN
+            INSERT INTO `PUESTOS`(
+                `NOMBRE` ,
+                `DESCRIPCION`,
+                `ID_DEPARTAMENTO` )
+
+            VALUES (
+                NOMBRE_,
+                DESCRIPCION_,
+                ID_DEPARTAMENTO_);
+
+
+
+        WHEN  'UPDATE' THEN
+
+                UPDATE `PUESTOS`
+                SET
+                    `NOMBRE`            = NOMBRE_,
+                    `DESCRIPCION`       = DESCRIPCION_,
+                    `ID_DEPARTAMENTO`   = ID_DEPARTAMENTO_
+                WHERE `ID_PUESTO`  =  ID_PUESTO_;
+
+        WHEN  'DELETE' THEN
+
+                DELETE FROM `PUESTOS`  WHERE `ID_PUESTO` =  ID_PUESTO_;
+
+        ELSE
+            SELECT ("OTHER OPTION");
+END CASE;
+
+
+
 
 END IF$$
 DELIMITER;
