@@ -11,9 +11,14 @@ CREATE  PROCEDURE `SP_EMPLEADOS`(
     IN `HORASLABORALES_`        DECIMAL(10,2),
     IN `ID_BANCO_`              INT(11),
     IN `CUENTA_`                BIGINT(50),
+    IN `FECHA_INICIO_`          DATE,
+    IN `FECHA_FINAL_`           DATE,
+    IN `MONTO_`                 DECIMAL(10,2),
+    IN `ID_PUESTO_`             INT(11),
+    IN `FECHA_INICIO_PUESTO_`   DATE,
+    IN `FECHA_FINAL_PUESTO_`    DATE,
     IN `OPCION_`                ENUM('UPDATE','INSERT','DELETE')
     )
-    NO SQL
 IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERSONA_)=1) THEN
     -- CONDICIONAL QUE DETERMINA SI Y HAY UN EMPLEADO ASOCIADO AL ID DE PERSONA QUE SE QUIERE REGISTRAR
 
@@ -40,14 +45,42 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                             SUELDO_BASE_,
                             HORASLABORALES_ );
 
+
                         INSERT INTO `CUENTAS_BANCARIAS`(
                             `ID_BANCO`,
                             `ID_EMPLEADO`,
                             `CUENTA`)
                         VALUES (
                             ID_BANCO_,
-                            (SELECT LAST_INSERT_ID();),
+                            (SELECT LAST_INSERT_ID()),
                             CUENTA_);
+
+
+
+
+
+
+                            INSERT INTO `HISTORIAL_SALARIOS`(
+                                `ID_EMPLEADO`,
+                                `FECHA_INICIO_SALARIO`,
+                                `FECHA_FINAL_SALARIO`,
+                                `MONTO`)
+                            VALUES (
+                                 (SELECT LAST_INSERT_ID()),
+                                FECHA_INICIO_,
+                                NULL,
+                                MONTO_);
+
+
+                    INSERT INTO `HISTORIAL_PUESTO_EMPLEADO`(
+                        `ID_PUESTO`,
+                        `ID_EMPLEADO`,
+                        `FECHA_INICIO_PUESTO`)
+                    VALUES (
+                        ID_PUESTO_,
+                         (SELECT LAST_INSERT_ID()),
+                        FECHA_INICIO_PUESTO_
+                        );
 
 
                     END IF; -- PERSONA EMPLEADO
@@ -60,7 +93,7 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                                 `ID_GRADO_ACADEMICO`    = ID_GRADO_ACADEMICO_
                         WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
 
-                         UPDATE `CUENTAS_BANCARIAS`(
+                         UPDATE `CUENTAS_BANCARIAS`
                             SET
                                 `ID_BANCO`      = ID_BANCO_,
                                 `CUENTA`        = CUENTA_
