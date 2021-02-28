@@ -46,6 +46,10 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                             HORASLABORALES_ );
 
                         SET @ID=(SELECT LAST_INSERT_ID());
+                    /*##############################################
+                    ##################INSERT CUENTA###################
+                    ##############################################*/
+
                         INSERT INTO `CUENTAS_BANCARIAS`(
                             `ID_BANCO`,
                             `ID_EMPLEADO`,
@@ -55,22 +59,23 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                             @ID,
                             CUENTA_);
 
+                    /*##############################################
+                    #############INSERT HISTORIAL SALARIO##############
+                    ##############################################*/
 
-
-
-
-
-                            INSERT INTO `HISTORIAL_SALARIOS`(
-                                `ID_EMPLEADO`,
-                                `FECHA_INICIO_SALARIO`,
-                                `FECHA_FINAL_SALARIO`,
-                                `MONTO`)
-                            VALUES (
-                                 @ID,
-                                FECHA_INICIO_,
-                                NULL,
-                                MONTO_);
-
+                    INSERT INTO `HISTORIAL_SALARIOS`(
+                        `ID_EMPLEADO`,
+                        `FECHA_INICIO_SALARIO`,
+                        `FECHA_FINAL_SALARIO`,
+                        `MONTO`)
+                    VALUES (
+                            @ID,
+                        FECHA_INICIO_,
+                        NULL,
+                        MONTO_);
+                    /*##############################################
+                    #############INSERT HISTORIAL PUESTO##############
+                    ##############################################*/
 
                     INSERT INTO `HISTORIAL_PUESTO_EMPLEADO`(
                         `ID_PUESTO`,
@@ -93,12 +98,19 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
                                 `ID_GRADO_ACADEMICO`    = ID_GRADO_ACADEMICO_
                         WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
 
+
+                    /*##############################################
+                    ##################UPDATE CUENTA##############
+                    ##############################################*/
                          UPDATE `CUENTAS_BANCARIAS`
                             SET
                                 `ID_BANCO`      = ID_BANCO_,
                                 `CUENTA`        = CUENTA_
                         WHERE `ID_EMPLEADO` = ID_EMPLEADO_;
 
+                    /*##############################################
+                    ##################UPDATE SALARIO##############
+                    ##############################################*/
                         SET @MONTO=(SELECT `MONTO` FROM `HISTORIAL_SALARIOS` WHERE `ID_EMPLEADO`=ID_EMPLEADO_ && `FECHA_FINAL_SALARIO` IS NULL);
                         IF(@MONTO<>SUELDO_BASE_) THEN
                             UPDATE `HISTORIAL_SALARIOS`
@@ -119,6 +131,29 @@ IF (SELECT EXISTS(SELECT `ID_PERSONA` FROM `PERSONAS` WHERE `ID_PERSONA`=ID_PERS
 
                         END IF;
 
+                    /*##############################################
+                    ##################UPDATE PUESTO##############
+                    ##############################################*/
+                        SET @PUESTO=(SELECT `ID_PUESTO` FROM `HISTORIAL_PUESTO_EMPLEADO` WHERE `ID_EMPLEADO`=ID_EMPLEADO_ && `FECHA_FINAL_PUESTO` IS NULL);
+                        IF(@PUESTO<>ID_PUESTO_) THEN
+                            UPDATE `HISTORIAL_PUESTO_EMPLEADO`
+                                SET
+                                    `FECHA_FINAL_PUESTO`  =(now())
+                            WHERE `ID_EMPLEADO` = ID_EMPLEADO_ && `FECHA_FINAL_PUESTO` IS NULL;
+
+                            INSERT INTO `HISTORIAL_PUESTO_EMPLEADO`(
+                                `ID_PUESTO`,
+                                `ID_EMPLEADO`,
+                                `FECHA_INICIO_PUESTO`,
+                                `FECHA_FINAL_PUESTO`)
+                            VALUES (
+                                ID_PUESTO_,
+                                ID_EMPLEADO_,
+                                NOW(),
+                                NULL
+                               );
+
+                        END IF;
 
                 WHEN  'DELETE' THEN
                          UPDATE `EMPLEADOS`
